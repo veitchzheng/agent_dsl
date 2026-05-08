@@ -1,0 +1,406 @@
+app:
+  description: 本智能体支持粘贴文本或上传文件，自动提取内容，由大模型精准校对错别字、语法及标点错误，输出修正稿与详细修改明细，严格保持原意不变。
+  icon: ''
+  icon_background: '#FFEAD5'
+  mode: advanced-chat
+  name: 文件校对
+  use_icon_as_answer_icon: false
+kind: app
+version: 0.1.2
+workflow:
+  conversation_variables:
+  - description: ''
+    id: 7660c153-76c8-4d22-9843-eb71710dc360
+    name: raw_text
+    value: ''
+    value_type: string
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        sourceType: start
+        targetType: if-else
+      id: 1778141768424-source-1778142550780-target
+      source: '1778141768424'
+      sourceHandle: source
+      target: '1778142550780'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: if-else
+        targetType: document-extractor
+      id: 1778142550780-true-1778142612049-target
+      source: '1778142550780'
+      sourceHandle: 'true'
+      target: '1778142612049'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: if-else
+        targetType: assigner
+      id: 1778142550780-false-1778142922900-target
+      source: '1778142550780'
+      sourceHandle: 'false'
+      target: '1778142922900'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: document-extractor
+        targetType: assigner
+      id: 1778142612049-source-1778142933369-target
+      source: '1778142612049'
+      sourceHandle: source
+      target: '1778142933369'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: assigner
+        targetType: llm
+      id: 1778142922900-source-1778142749544-target
+      selected: false
+      source: '1778142922900'
+      sourceHandle: source
+      target: '1778142749544'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: assigner
+        targetType: llm
+      id: 1778142933369-source-1778142749544-target
+      source: '1778142933369'
+      sourceHandle: source
+      target: '1778142749544'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: code
+      id: 1778142749544-source-1778143112705-target
+      source: '1778142749544'
+      sourceHandle: source
+      target: '1778143112705'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: answer
+      id: 1778143112705-source-1778143166512-target
+      source: '1778143112705'
+      sourceHandle: source
+      target: '1778143166512'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: Start
+        type: start
+        variables:
+        - label: 输入方式
+          max_length: 48
+          options:
+          - text
+          - file
+          required: true
+          type: select
+          variable: input_type
+        - allowed_file_extensions: []
+          allowed_file_types:
+          - document
+          allowed_file_upload_methods:
+          - local_file
+          label: 校对文档
+          max_length: 48
+          options: []
+          required: false
+          type: file
+          variable: file_input
+      height: 116
+      id: '1778141768424'
+      position:
+        x: 80
+        y: 282
+      positionAbsolute:
+        x: 80
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: is
+            id: 18a08c3b-7513-4ea0-8767-8a243d8c2866
+            value: file
+            varType: string
+            variable_selector:
+            - '1778141768424'
+            - input_type
+          id: 'true'
+          logical_operator: and
+        desc: ''
+        selected: false
+        title: 判断输入类型
+        type: if-else
+      height: 126
+      id: '1778142550780'
+      position:
+        x: 384
+        y: 282
+      positionAbsolute:
+        x: 384
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        is_array_file: false
+        selected: false
+        title: Doc Extractor
+        type: document-extractor
+        variable_selector:
+        - '1778141768424'
+        - file_input
+      height: 94
+      id: '1778142612049'
+      position:
+        x: 714.7585403113296
+        y: 80.60677555157253
+      positionAbsolute:
+        x: 714.7585403113296
+        y: 80.60677555157253
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: Qwen3-30B-A3B-Instruct-2507
+          provider: openai_api_compatible
+        prompt_template:
+        - role: system
+          text: "你是一名严谨的中文校对专家，同时精通中文和英文文本的校对规则。你的任务是仔细校对用户提供的文本，并输出校对后的完美版本与修改明细。\n\
+            \n### 校对要求：\n1. **错别字**：修正所有错字、别字，包括音近、形近错误。\n2. **语法错误**：修正不当的词语搭配、语序混乱、成分残缺等语法问题。\n\
+            3. **标点符号**：修正中英文标点混用、全角/半角错误、多余或缺失的标点。\n4. **用词规范**：将不规范的口语、网络用语替换为恰当的书面表达（用户要求保留风格时除外），统一专有名词和术语。\n\
+            5. **格式问题**：清除多余空格、空行，调整不规范的缩进，统一文本格式。\n6. **保持原意**：绝对不可改变原文的语义、事实和作者意图，仅修正表达层面的问题。\n\
+            7. **多语言处理**：中文文本中出现的英文单词/句子，按英文校对规则检查拼写与语法，但保持其原有大小写形式（如专有名词）。\n8. **不确定保持原样**：若遇到无法确定是否为错误的表述，保留原文并在“备注”中说明疑问。\n\
+            \n### 输出格式：\n你必须严格输出一个 JSON 对象，该对象包含以下字段：\n- `corrected_text`：字符串，校对后的完整文本。\n\
+            - `changes`：数组，每一项为一个对象，描述一处修改，格式为：\n  - `original`：原始错误片段（必须直接引自原文）\n\
+            \  - `corrected`：修正后的片段\n  - `reason`：修改理由（简明，如“错字”“语法错误”“标点修正”）\n\n###\
+            \ 输出示例：\n{\n  \"corrected_text\": \"春风吹绿了江南岸。\",\n  \"changes\": [\n \
+            \   {\n      \"original\": \"春分\",\n      \"corrected\": \"春风\",\n   \
+            \   \"reason\": \"错别字\"\n    }\n  ]\n}"
+        - role: user
+          text: '
+
+            {{#conversation.raw_text#}}'
+        selected: false
+        title: 模型校对
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 98
+      id: '1778142749544'
+      position:
+        x: 1362.3945316778775
+        y: 372.7496731926376
+      positionAbsolute:
+        x: 1362.3945316778775
+        y: 372.7496731926376
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        assigned_variable_selector:
+        - conversation
+        - raw_text
+        desc: ''
+        input_variable_selector:
+        - sys
+        - query
+        selected: false
+        title: 校对文本
+        type: assigner
+        write_mode: over-write
+      height: 132
+      id: '1778142922900'
+      position:
+        x: 733.361130633635
+        y: 326.9134620601597
+      positionAbsolute:
+        x: 733.361130633635
+        y: 326.9134620601597
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        assigned_variable_selector:
+        - conversation
+        - raw_text
+        desc: ''
+        input_variable_selector:
+        - '1778142612049'
+        - text
+        selected: false
+        title: 校对文本
+        type: assigner
+        write_mode: over-write
+      height: 132
+      id: '1778142933369'
+      position:
+        x: 1018.7585403113296
+        y: 80.60677555157253
+      positionAbsolute:
+        x: 1018.7585403113296
+        y: 80.60677555157253
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\n\ndef main(llm_output):\n    data = json.loads(llm_output)\n\
+          \    corrected = data.get(\"corrected_text\", \"\")\n    changes = data.get(\"\
+          changes\", [])\n    # 把修改列表格式化为易读字符串\n    changes_str = \"\\n\".join([f\"\
+          - 修订：{c.get('original', '')} → {c.get('corrected', '')}（{c.get('reason',\
+          \ '')}）\" for c in changes])\n    return {\n        \"corrected_text\":\
+          \ corrected,\n        \"changes_summary\": changes_str\n    }"
+        code_language: python3
+        desc: ''
+        outputs:
+          changes_summary:
+            children: null
+            type: string
+          corrected_text:
+            children: null
+            type: string
+        selected: false
+        title: 解析校对结果
+        type: code
+        variables:
+        - value_selector:
+          - '1778142749544'
+          - text
+          variable: llm_output
+      height: 54
+      id: '1778143112705'
+      position:
+        x: 1666.3945316778775
+        y: 372.7496731926376
+      positionAbsolute:
+        x: 1666.3945316778775
+        y: 372.7496731926376
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        answer: '### 校对后文本：
+
+          {{#1778143112705.corrected_text#}}
+
+
+          ### 修改明细：
+
+          {{#1778143112705.changes_summary#}}'
+        desc: ''
+        selected: false
+        title: Answer
+        type: answer
+        variables: []
+      height: 154
+      id: '1778143166512'
+      position:
+        x: 1970.3945316778775
+        y: 372.7496731926376
+      positionAbsolute:
+        x: 1970.3945316778775
+        y: 372.7496731926376
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    viewport:
+      x: -292.83201566525213
+      y: 289.14651777716807
+      zoom: 0.4376956648471321

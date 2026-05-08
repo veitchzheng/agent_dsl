@@ -1,0 +1,411 @@
+app:
+  description: 上传参考附件并描述报告要求，智能体自动提取附件内容，分章节撰写、事实核实、章节审核、报告编译、全篇终审，最终输出专业报告。
+  icon: ''
+  icon_background: '#FFEAD5'
+  mode: advanced-chat
+  name: 报告生成
+  use_icon_as_answer_icon: false
+kind: app
+version: 0.1.2
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: '你好！我是报告生成助手。请上传参考附件，并描述你需要的报告类型、格式和具体要求，我将为你生成专业报告。'
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions:
+    - 帮我生成一份项目总结报告，参考附件中的项目数据
+    - 根据附件中的会议纪要，生成一份会议决议报告
+    - 基于附件资料，生成一份市场分析报告
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        sourceType: start
+        targetType: document-extractor
+      id: 1780000001000-source-1780000002000-target
+      source: '1780000001000'
+      sourceHandle: source
+      target: '1780000002000'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: document-extractor
+        targetType: llm
+      id: 1780000002000-source-1780000003000-target
+      source: '1780000002000'
+      sourceHandle: source
+      target: '1780000003000'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: llm
+      id: 1780000003000-source-1780000004000-target
+      source: '1780000003000'
+      sourceHandle: source
+      target: '1780000004000'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: llm
+      id: 1780000004000-source-1780000005000-target
+      source: '1780000004000'
+      sourceHandle: source
+      target: '1780000005000'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: code
+      id: 1780000005000-source-1780000006000-target
+      source: '1780000005000'
+      sourceHandle: source
+      target: '1780000006000'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: llm
+      id: 1780000006000-source-1780000007000-target
+      source: '1780000006000'
+      sourceHandle: source
+      target: '1780000007000'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: answer
+      id: 1780000007000-source-1780000008000-target
+      source: '1780000007000'
+      sourceHandle: source
+      target: '1780000008000'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: Start
+        type: start
+        variables:
+        - allowed_file_extensions:
+          - .doc
+          - .docx
+          - .pdf
+          - .txt
+          - .md
+          - .xls
+          - .xlsx
+          - .ppt
+          - .pptx
+          allowed_file_types:
+          - document
+          allowed_file_upload_methods:
+          - local_file
+          label: 参考附件
+          max_length: 48
+          options: []
+          required: true
+          type: file
+          variable: attachments
+        - label: 报告要求
+          max_length: 10000
+          options: []
+          required: true
+          type: paragraph
+          variable: requirements
+      height: 116
+      id: '1780000001000'
+      position:
+        x: 80
+        y: 282
+      positionAbsolute:
+        x: 80
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        is_array_file: true
+        selected: false
+        title: 提取附件内容
+        type: document-extractor
+        variable_selector:
+        - '1780000001000'
+        - attachments
+      height: 94
+      id: '1780000002000'
+      position:
+        x: 384
+        y: 282
+      positionAbsolute:
+        x: 384
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: Qwen3-30B-A3B-Thinking-2507
+          provider: openai_api_compatible
+        prompt_template:
+        - role: system
+          text: "你是一名专业的报告撰写专家。你的任务是根据参考资料和用户需求，先规划报告章节结构，再逐章撰写内容。\n\n### 工作流程：\n1. 分析用户需求，确定报告类型、风格和篇幅。\n2. 梳理参考资料，提取与报告相关的关键信息。\n3. 规划报告章节结构（含章节标题和每章要点）。\n4. 逐章撰写完整内容，每章独立成文。\n\n### 输出格式：\n你必须严格输出一个 JSON 对象：\n{\n  \"report_title\": \"报告标题\",\n  \"chapters\": [\n    {\n      \"chapter_title\": \"第一章 标题\",\n      \"content\": \"该章节的完整正文内容（Markdown格式）\",\n      \"source_refs\": [\"引用的附件内容摘要或原文片段\"]\n    }\n  ]\n}\n\n### 撰写原则：\n- 所有内容必须基于参考资料，不得编造。\n- 每章末尾标注 source_refs，列出本章引用的原始资料片段。\n- 语言专业、客观、准确。\n- 如参考资料不足以支撑某章节，在 content 中如实说明信息缺口。"
+        - role: user
+          text: "## 用户报告要求\n\n{{#1780000001000.requirements#}}\n\n## 参考附件内容\n\n{{#1780000002000.text#}}\n\n请根据以上内容，规划章节并逐章撰写报告。"
+        selected: false
+        title: 分章节撰写
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 98
+      id: '1780000003000'
+      position:
+        x: 688
+        y: 282
+      positionAbsolute:
+        x: 688
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.3
+          mode: chat
+          name: Qwen3-30B-A3B-Instruct-2507
+          provider: openai_api_compatible
+        prompt_template:
+        - role: system
+          text: "你是一名严谨的事实核查员。你的任务是将报告初稿中的每一处事实性陈述与原始参考资料进行逐一比对，核实其准确性。\n\n### 核查规则：\n1. 逐条检查报告中的事实陈述（数据、日期、人名、地名、事件描述等）。\n2. 与原始参考资料比对，判断是否一致。\n3. 对于无法在参考资料中找到依据的陈述，标记为\"待核实\"。\n4. 对于与参考资料矛盾的陈述，标记为\"错误\"并给出正确内容。\n5. 对于表述模糊但大意正确的陈述，标记为\"通过（建议优化表述）\"。\n\n### 输出格式：\n你必须严格输出一个 JSON 对象：\n{\n  \"verification_summary\": \"整体核查结论（一句话）\",\n  \"chapters\": [\n    {\n      \"chapter_title\": \"原章节标题\",\n      \"content\": \"原章节内容\",\n      \"verification_result\": \"通过\" | \"存在问题\",\n      \"issues\": [\n        {\n          \"statement\": \"被核查的原文陈述\",\n          \"verdict\": \"通过\" | \"错误\" | \"待核实\" | \"通过（建议优化表述）\",\n          \"correction\": \"修正后内容（如 verdict 为错误）或优化建议\",\n          \"source_evidence\": \"参考资料中的对应原文\"\n        }\n      ]\n    }\n  ]\n}\n\n### 注意事项：\n- 只核查事实性内容，不评判文笔和结构。\n- 对于主观性分析/建议类内容，标记为\"通过\"（非事实陈述）。\n- 保持客观，不添加个人观点。"
+        - role: user
+          text: "## 原始参考资料\n\n{{#1780000002000.text#}}\n\n## 报告初稿（分章节）\n\n{{#1780000003000.text#}}\n\n请对以上报告初稿进行事实核实。"
+        selected: false
+        title: 事实核实
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 98
+      id: '1780000004000'
+      position:
+        x: 992
+        y: 282
+      positionAbsolute:
+        x: 992
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.5
+          mode: chat
+          name: Qwen3-30B-A3B-Thinking-2507
+          provider: openai_api_compatible
+        prompt_template:
+        - role: system
+          text: "你是一名资深编辑，负责审核报告各章节的质量。你将收到经过事实核实的报告章节，需要从内容质量、逻辑结构、语言表达三个维度进行审核。\n\n### 审核维度：\n1. **内容质量**：章节是否完整覆盖应有要点，论述是否充分，结论是否有说服力。\n2. **逻辑结构**：段落衔接是否自然，论证逻辑是否清晰，章节内部结构是否合理。\n3. **语言表达**：用词是否专业准确，语句是否通顺，是否存在歧义或冗余。\n\n### 审核动作：\n- 对于事实核实标记为\"错误\"的内容，直接采用修正后的版本。\n- 对于\"待核实\"的内容，根据上下文判断是否保留（保留则标注\"待确认\"）。\n- 优化语言表达，使行文更流畅专业。\n- 调整段落结构，增强逻辑性。\n\n### 输出格式：\n你必须严格输出一个 JSON 对象：\n{\n  \"review_summary\": \"整体审核意见（一句话）\",\n  \"chapters\": [\n    {\n      \"chapter_title\": \"章节标题\",\n      \"content\": \"审核修改后的完整章节内容（Markdown格式）\",\n      \"review_notes\": \"本章审核意见\",\n      \"quality_score\": 85\n    }\n  ]\n}\n\n### 注意事项：\n- 不得改变原意和事实。\n- quality_score 为 0-100 的整数，低于 70 的章节需在 review_notes 中说明主要问题。\n- 保持用户要求的报告风格。"
+        - role: user
+          text: "## 用户报告要求\n\n{{#1780000001000.requirements#}}\n\n## 事实核实结果\n\n{{#1780000004000.text#}}\n\n请对以上章节进行审核并输出修改后的版本。"
+        selected: false
+        title: 章节审核
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 98
+      id: '1780000005000'
+      position:
+        x: 1296
+        y: 282
+      positionAbsolute:
+        x: 1296
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\n\ndef main(chapters_json):\n    data = json.loads(chapters_json)\n\
+          \    chapters = data.get(\"chapters\", [])\n    report_title = data.get(\"\
+          report_title\", \"报告\")\n    review_summary = data.get(\"review_summary\"\
+          , \"\")\n\n    # 编译报告\n    lines = []\n    lines.append(f\"# {report_title}\"\
+          )\n    lines.append(\"\")\n\n    # 目录\n    lines.append(\"## 目录\")\n    lines.append(\"\
+          \")\n    for i, ch in enumerate(chapters, 1):\n        lines.append(f\"\
+          {i}. {ch.get('chapter_title', f'第{i}章')}\")\n    lines.append(\"\")\n\n \
+          \   # 正文\n    for ch in chapters:\n        lines.append(f\"## {ch.get('chapter_title',\
+          \ '')}\")\n        lines.append(\"\")\n        lines.append(ch.get(\"content\"\
+          , \"\"))\n        lines.append(\"\")\n        notes = ch.get(\"review_notes\"\
+          , \"\")\n        if notes:\n            lines.append(f\"> 审核备注：{notes}\"\
+          )\n            lines.append(\"\")\n\n    # 审核概要\n    if review_summary:\n \
+          \       lines.append(\"---\")\n        lines.append(\"\")\n        lines.append(f\"\
+          **审核概要**：{review_summary}\")\n        lines.append(\"\")\n\n    compiled\
+          \ = \"\\n\".join(lines)\n    return {\"compiled_report\": compiled}"
+        code_language: python3
+        desc: ''
+        outputs:
+          compiled_report:
+            children: null
+            type: string
+        selected: false
+        title: 报告编译
+        type: code
+        variables:
+        - value_selector:
+          - '1780000005000'
+          - text
+          variable: chapters_json
+      height: 54
+      id: '1780000006000'
+      position:
+        x: 1600
+        y: 282
+      positionAbsolute:
+        x: 1600
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.3
+          mode: chat
+          name: Qwen3-30B-A3B-Thinking-2507
+          provider: openai_api_compatible
+        prompt_template:
+        - role: system
+          text: "你是一名报告终审专家，负责对编译完成的报告进行最终审查和润色。这是报告交付前的最后一道质量关卡。\n\n### 终审检查清单：\n1. **完整性**：报告是否包含所有必要章节，是否遗漏用户要求的内容。\n2. **一致性**：各章节之间的数据、术语、结论是否一致，前后是否存在矛盾。\n3. **格式规范**：标题层级、段落间距、列表格式是否统一规范。\n4. **语言润色**：全篇语言风格是否统一，是否存在错别字或病句。\n5. **用户需求匹配**：最终报告是否满足用户在报告要求中提出的所有要点。\n\n### 输出要求：\n- 直接输出终审后的完整报告（Markdown 格式），不需要 JSON 包裹。\n- 在报告末尾附加一段\"终审说明\"，简述本次审查所做的修改和最终评价。\n- 如发现重大问题（如关键章节缺失、核心数据矛盾），在报告开头用明显标记提示。\n\n### 注意事项：\n- 只做润色和格式统一，不得改变报告的事实内容和核心观点。\n- 如报告质量已很高，仅做最小化修改。"
+        - role: user
+          text: "## 用户原始报告要求\n\n{{#1780000001000.requirements#}}\n\n## 编译后的报告\n\n{{#1780000006000.compiled_report#}}\n\n请对以上报告进行全篇终审，输出最终版本。"
+        selected: false
+        title: 全篇终审
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 98
+      id: '1780000007000'
+      position:
+        x: 1904
+        y: 282
+      positionAbsolute:
+        x: 1904
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        answer: '{{#1780000007000.text#}}'
+        desc: ''
+        selected: false
+        title: 输出报告
+        type: answer
+        variables: []
+      height: 103
+      id: '1780000008000'
+      position:
+        x: 2208
+        y: 282
+      positionAbsolute:
+        x: 2208
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    viewport:
+      x: 0
+      y: 0
+      zoom: 1

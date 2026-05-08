@@ -1,0 +1,342 @@
+app:
+  description: 政策咨询AI实时解读最新法规，精准匹配企业需求，助您快速合规决策，规避风险，抢占市场先机。
+  icon: ''
+  icon_background: '#FFEAD5'
+  mode: advanced-chat
+  name: 政策咨询
+  use_icon_as_answer_icon: false
+kind: app
+version: 0.1.2
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        sourceType: start
+        targetType: question-classifier
+      id: 1778138151321-source-1778140373530-target
+      source: '1778138151321'
+      sourceHandle: source
+      target: '1778140373530'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: question-classifier
+        targetType: llm
+      id: 1778140373530-2-1778140421377-target
+      source: '1778140373530'
+      sourceHandle: '2'
+      target: '1778140421377'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: answer
+      id: 1778140421377-source-1778140443063-target
+      source: '1778140421377'
+      sourceHandle: source
+      target: '1778140443063'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: question-classifier
+        targetType: knowledge-retrieval
+      id: 1778140373530-1-1778140495533-target
+      source: '1778140373530'
+      sourceHandle: '1'
+      target: '1778140495533'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: knowledge-retrieval
+        targetType: llm
+      id: 1778140495533-source-1778140538405-target
+      source: '1778140495533'
+      sourceHandle: source
+      target: '1778140538405'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: answer
+      id: 1778140538405-source-1778140589437-target
+      source: '1778140538405'
+      sourceHandle: source
+      target: '1778140589437'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: Start
+        type: start
+        variables: []
+      height: 54
+      id: '1778138151321'
+      position:
+        x: 30
+        y: 288
+      positionAbsolute:
+        x: 30
+        y: 288
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        classes:
+        - id: '1'
+          name: policy_consult
+        - id: '2'
+          name: chitchat
+        desc: ''
+        instructions: ''
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: Qwen3-30B-A3B-Instruct-2507
+          provider: openai_api_compatible
+        query_variable_selector:
+        - '1778138151321'
+        - sys.query
+        selected: false
+        title: Question Classifier
+        topics: []
+        type: question-classifier
+        vision:
+          enabled: false
+      height: 176
+      id: '1778140373530'
+      position:
+        x: 334
+        y: 288
+      positionAbsolute:
+        x: 334
+        y: 288
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: Qwen3-30B-A3B-Thinking-2507
+          provider: openai_api_compatible
+        prompt_template:
+        - role: system
+          text: 你是一个专业的政策咨询智能助手，只能回答与法律法规、政府政策、办事流程相关的问题。如果用户闲聊或询问无关内容，请礼貌说明你的服务范围，并主动提供几个本智能体擅长回答的政策问题示例。语气亲切但不啰嗦。
+        - role: user
+          text: '{{#sys.query#}}'
+        selected: false
+        title: 闲聊及非政策兜底
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 98
+      id: '1778140421377'
+      position:
+        x: 655.189596421839
+        y: 388.61912114245143
+      positionAbsolute:
+        x: 655.189596421839
+        y: 388.61912114245143
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        answer: '{{#1778140421377.text#}}'
+        desc: ''
+        selected: false
+        title: 兜底回答
+        type: answer
+        variables: []
+      height: 103
+      id: '1778140443063'
+      position:
+        x: 930.5402690521073
+        y: 393.4295247206125
+      positionAbsolute:
+        x: 930.5402690521073
+        y: 393.4295247206125
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        dataset_ids:
+        - 09f9d842-ccb8-4417-b111-9e4145a5b3ea
+        desc: ''
+        multiple_retrieval_config:
+          reranking_enable: true
+          reranking_mode: null
+          reranking_model:
+            model: ''
+            provider: ''
+          score_threshold: null
+          top_k: 2
+          weights: null
+        query_variable_selector:
+        - '1778138151321'
+        - sys.query
+        retrieval_mode: multiple
+        selected: false
+        title: 知识检索
+        type: knowledge-retrieval
+      height: 92
+      id: '1778140495533'
+      position:
+        x: 638
+        y: 159.90773080988635
+      positionAbsolute:
+        x: 638
+        y: 159.90773080988635
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: Qwen3-30B-A3B-Thinking-2507
+          provider: openai_api_compatible
+        prompt_template:
+        - role: system
+          text: "你是一位严谨、专业的政策解读专家。你将收到用户问题，以及从政策知识库中检索到的相关条文。你的任务是基于检索到的内容给出清晰、准确的答复，并严格遵守以下规则：\n\
+            \n1. 回答原则：\n   - 优先直接引用政策原文，再以通俗语言解释。\n   - 如果问题涉及不同地区或不同人群，务必区分说明，不得混为一谈。\n\
+            \   - 如果检索到的信息不足以完整回答，必须如实说明“现有资料未覆盖该细节”，并建议用户查询官方渠道或提供具体政策文件名称。\n   -\
+            \ 严禁编造、推测政策内容，严禁使用“可能”“大概”等模糊表达，除非原文就有类似表述。\n   - 如果用户询问的是办事流程，请给出步骤概述，并提示以当地最新公告为准。\n\
+            \n2. 引用规范：\n   - 回答末尾必须附上“参考依据”小节，列出所引用的政策文件名称、文号（如有）、条款号（如有）和发布日期。\n\
+            \   - 引用格式示例：\n     【参考依据】\n     - 《中华人民共和国社会保险法》（2018修正）第十六条\n     -\
+            \ 《北京市积分落户管理办法》（京政办发〔2020〕9号）第三条第2款\n\n3. 回答结构：\n   - 简短总结（一句话结论）\n  \
+            \ - 详细解释（分点、分情况）\n   - 补充提示（例外情况、时效性提醒）\n   - 参考依据\n\n4. 安全与合规限制：\n  \
+            \ - 如果你发现用户问题本身涉及违法违规行为，请拒绝提供指导，并提示遵守法律法规。\n   - 对于尚未生效或已废止的政策，必须明确标示其状态。\n\
+            \n5. 语言：使用专业但平实的中文，避免官僚套话，让普通市民也能听懂。"
+        - role: user
+          text: '用户问题：{{#sys.query#}}
+
+
+            以下是检索到的相关政策内容（按相关性排序）：
+
+            {{#1778140495533.result#}}
+
+
+            请根据以上信息生成回答。'
+        selected: false
+        title: 政策咨询答案生成
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 98
+      id: '1778140538405'
+      position:
+        x: 939.7080538104215
+        y: 159.90773080988635
+      positionAbsolute:
+        x: 939.7080538104215
+        y: 159.90773080988635
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        answer: '{{#1778140538405.text#}}'
+        desc: ''
+        selected: false
+        title: 政策库检索回答
+        type: answer
+        variables: []
+      height: 103
+      id: '1778140589437'
+      position:
+        x: 1246
+        y: 159.90773080988635
+      positionAbsolute:
+        x: 1246
+        y: 159.90773080988635
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    viewport:
+      x: -609.2562150631652
+      y: -33.89899856832221
+      zoom: 1.170744959879688
