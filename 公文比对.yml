@@ -1,0 +1,291 @@
+app:
+  description: 可自动解析两份公文文本，智能比对条款差异、表述异同、内容增删，精准标出分歧点位，辅助公文校核与合规审核。
+  icon: ''
+  icon_background: '#FFEAD5'
+  mode: advanced-chat
+  name: 公文比对
+  use_icon_as_answer_icon: false
+kind: app
+version: 0.1.2
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        sourceType: start
+        targetType: document-extractor
+      id: 1778210296984-source-1778223649512-target
+      source: '1778210296984'
+      sourceHandle: source
+      target: '1778223649512'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: start
+        targetType: document-extractor
+      id: 1778210296984-source-1778224071274-target
+      source: '1778210296984'
+      sourceHandle: source
+      target: '1778224071274'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: document-extractor
+        targetType: llm
+      id: 1778223649512-source-1778224156171-target
+      source: '1778223649512'
+      sourceHandle: source
+      target: '1778224156171'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: document-extractor
+        targetType: llm
+      id: 1778224071274-source-1778224156171-target
+      source: '1778224071274'
+      sourceHandle: source
+      target: '1778224156171'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: answer
+      id: 1778224156171-source-1778224476441-target
+      source: '1778224156171'
+      sourceHandle: source
+      target: '1778224476441'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: 开始
+        type: start
+        variables:
+        - allowed_file_extensions: []
+          allowed_file_types:
+          - document
+          allowed_file_upload_methods:
+          - local_file
+          label: 原文
+          max_length: 2
+          options: []
+          required: true
+          type: file
+          variable: file1
+        - allowed_file_extensions: []
+          allowed_file_types:
+          - document
+          allowed_file_upload_methods:
+          - local_file
+          label: 比对公文
+          max_length: 48
+          options: []
+          required: true
+          type: file
+          variable: file2
+      height: 116
+      id: '1778210296984'
+      position:
+        x: -98.56423011940791
+        y: 297.1325618745261
+      positionAbsolute:
+        x: -98.56423011940791
+        y: 297.1325618745261
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        is_array_file: false
+        selected: false
+        title: 参考公文内容提取
+        type: document-extractor
+        variable_selector:
+        - '1778210296984'
+        - file1
+      height: 94
+      id: '1778223649512'
+      position:
+        x: 249.0265088431545
+        y: 147.15728809166166
+      positionAbsolute:
+        x: 249.0265088431545
+        y: 147.15728809166166
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        is_array_file: false
+        selected: false
+        title: 比对公文内容提取
+        type: document-extractor
+        variable_selector:
+        - '1778210296984'
+        - file2
+      height: 94
+      id: '1778224071274'
+      position:
+        x: 249.0265088431545
+        y: 469.96217553010575
+      positionAbsolute:
+        x: 249.0265088431545
+        y: 469.96217553010575
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: Qwen3-30B-A3B-Thinking-2507
+          provider: openai_api_compatible
+        prompt_template:
+        - id: 96f9ea52-c111-4d56-beba-aa4ecfb70b4a
+          role: system
+          text: '你是一个专业的公文比对助手，擅长细致入微地比对两份公文的异同。
+
+            你的职责：
+
+            1. 接收用户输入的两份公文：原文（参考版本）和比对文（待比对版本）
+
+            2. 严格按照既定格式进行全面比对
+
+            3. 清晰标注所有差异点，不遗漏任何细节
+
+            4. 给出专业的分析结论
+
+            5. 如果用户有要求比对内容，优先按照用户要求进行比对
+
+            比对维度：
+
+            - 标题、主送机关
+
+            - 正文各段落内容
+
+            - 落款信息（发文机关、日期等）
+
+            - 格式排版
+
+            - 文字表述细节'
+        - id: 8132a555-4dec-4169-86bd-8b720237accf
+          role: user
+          text: '## 原文
+
+            {{#1778223649512.text#}}
+
+            ## 比对文
+
+            {{#1778224071274.text#}}
+
+            ## 用户要求
+
+            {{#sys.query#}}'
+        selected: false
+        title: 公文比对算法
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 98
+      id: '1778224156171'
+      position:
+        x: 587.1873663639827
+        y: 355.3738879325802
+      positionAbsolute:
+        x: 587.1873663639827
+        y: 355.3738879325802
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        answer: '{{#1778224156171.text#}}'
+        desc: ''
+        selected: false
+        title: 直接回复
+        type: answer
+        variables: []
+      height: 103
+      id: '1778224476441'
+      position:
+        x: 891.1873663639827
+        y: 355.3738879325802
+      positionAbsolute:
+        x: 891.1873663639827
+        y: 355.3738879325802
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    viewport:
+      x: 431.7884136955651
+      y: 42.63343470230717
+      zoom: 0.6141130524923148

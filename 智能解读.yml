@@ -1,0 +1,397 @@
+app:
+  description: 深度解读政策与报告文件，精准提炼核心条款与关键数据，自动归纳重点，辅助用户高效决策。
+  icon: ''
+  icon_background: '#FFEAD5'
+  mode: advanced-chat
+  name: 智能解读
+  use_icon_as_answer_icon: false
+kind: app
+version: 0.1.2
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        sourceType: start
+        targetType: if-else
+      id: 1778226115594-source-1778226202227-target
+      source: '1778226115594'
+      sourceHandle: source
+      target: '1778226202227'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: if-else
+        targetType: document-extractor
+      id: 1778226202227-true-1778226127348-target
+      source: '1778226202227'
+      sourceHandle: 'true'
+      target: '1778226127348'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: document-extractor
+        targetType: llm
+      id: 1778226127348-source-1778226236325-target
+      source: '1778226127348'
+      sourceHandle: source
+      target: '1778226236325'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: answer
+      id: 1778226236325-source-1778226525630-target
+      source: '1778226236325'
+      sourceHandle: source
+      target: '1778226525630'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: if-else
+        targetType: llm
+      id: 1778226202227-false-1778226549678-target
+      source: '1778226202227'
+      sourceHandle: 'false'
+      target: '1778226549678'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: answer
+      id: 1778226549678-source-1778226586976-target
+      source: '1778226549678'
+      sourceHandle: source
+      target: '1778226586976'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: 开始
+        type: start
+        variables:
+        - allowed_file_extensions: []
+          allowed_file_types:
+          - document
+          allowed_file_upload_methods:
+          - local_file
+          - remote_url
+          label: 上传附件
+          max_length: 48
+          options: []
+          required: false
+          type: file
+          variable: file
+      height: 90
+      id: '1778226115594'
+      position:
+        x: 81.34901098818466
+        y: 282
+      positionAbsolute:
+        x: 81.34901098818466
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        is_array_file: false
+        selected: false
+        title: 文档提取器
+        type: document-extractor
+        variable_selector:
+        - '1778226115594'
+        - file
+      height: 94
+      id: '1778226127348'
+      position:
+        x: 763.0720876798962
+        y: 190.26725280344147
+      positionAbsolute:
+        x: 763.0720876798962
+        y: 190.26725280344147
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: exists
+            id: e7f45c78-801e-4b6c-8dcd-87a121c324a1
+            value: ''
+            varType: file
+            variable_selector:
+            - '1778226115594'
+            - file
+          id: 'true'
+          logical_operator: and
+        desc: ''
+        selected: false
+        title: 是否有附件
+        type: if-else
+      height: 126
+      id: '1778226202227'
+      position:
+        x: 398.8391208700315
+        y: 246.37362647691458
+      positionAbsolute:
+        x: 398.8391208700315
+        y: 246.37362647691458
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: Qwen3-30B-A3B-Thinking-2507
+          provider: openai_api_compatible
+        prompt_template:
+        - role: system
+          text: '你是一位专业的文档解读专家，擅长从各类文件资料中提取关键信息，帮助用户快速把握文档要点。
+
+            你的职责：
+
+            1. 深度阅读理解用户提供的文档内容
+
+            2. 提炼核心条款和重要规定
+
+            3. 提取关键数据和数字信息
+
+            4. 归纳整理重点要点
+
+            5. 分析文档的实用价值和注意事项
+
+
+            解读维度：
+
+            - 文档类型与性质
+
+            - 核心条款与主要规定
+
+            - 关键数据与指标
+
+            - 重要时间节点
+
+            - 权利与义务
+
+            - 禁止与限制条款
+
+            - 奖励与处罚条款
+
+            - 适用范围与对象
+
+            - 重点要点总结
+
+            '
+        - role: user
+          text: '## 文档内容
+
+            {{#1778226127348.text#}}
+
+            ## 用户要求
+
+            {{#sys.query#}}'
+        selected: false
+        title: 智能解读
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 98
+      id: '1778226236325'
+      position:
+        x: 1065.5938255659762
+        y: 190.26725280344147
+      positionAbsolute:
+        x: 1065.5938255659762
+        y: 190.26725280344147
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        answer: '{{#1778226236325.text#}}'
+        desc: ''
+        selected: false
+        title: 直接回复
+        type: answer
+        variables: []
+      height: 103
+      id: '1778226525630'
+      position:
+        x: 1371.0720876798962
+        y: 190.26725280344147
+      positionAbsolute:
+        x: 1371.0720876798962
+        y: 190.26725280344147
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: Qwen3-30B-A3B-Thinking-2507
+          provider: openai_api_compatible
+        prompt_template:
+        - id: cc39b2ea-20ce-42fb-b08a-cf90e7130bd6
+          role: system
+          text: '你是一位专业的文档解读专家，擅长从各类文件资料中提取关键信息，帮助用户快速把握文档要点。
+
+            你的职责：
+
+            1. 深度阅读理解用户提供的文档内容
+
+            2. 提炼核心条款和重要规定
+
+            3. 提取关键数据和数字信息
+
+            4. 归纳整理重点要点
+
+            5. 分析文档的实用价值和注意事项
+
+
+            解读维度：
+
+            - 文档类型与性质
+
+            - 核心条款与主要规定
+
+            - 关键数据与指标
+
+            - 重要时间节点
+
+            - 权利与义务
+
+            - 禁止与限制条款
+
+            - 奖励与处罚条款
+
+            - 适用范围与对象
+
+            - 重点要点总结
+
+            '
+        - role: user
+          text: '## 文档内容'
+        selected: false
+        title: 智能解读
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 98
+      id: '1778226549678'
+      position:
+        x: 763.0720876798962
+        y: 447.44127037272176
+      positionAbsolute:
+        x: 763.0720876798962
+        y: 447.44127037272176
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        answer: '{{#1778226549678.text#}}'
+        desc: ''
+        selected: false
+        title: 直接回复 2
+        type: answer
+        variables: []
+      height: 103
+      id: '1778226586976'
+      position:
+        x: 1067.0720876798962
+        y: 447.44127037272176
+      positionAbsolute:
+        x: 1067.0720876798962
+        y: 447.44127037272176
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    viewport:
+      x: 98.14748888143436
+      y: 56.68518443883033
+      zoom: 0.5751849770467763

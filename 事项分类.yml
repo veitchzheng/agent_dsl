@@ -1,0 +1,451 @@
+app:
+  description: 输入事项描述，智能体自动从紧急程度、重要程度、事项类型、处理优先级等多维度进行分类，输出结构化分类结果与处理建议。
+  icon: ''
+  icon_background: '#FFEAD5'
+  mode: advanced-chat
+  name: 事项分类
+  use_icon_as_answer_icon: false
+kind: app
+version: 0.1.2
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: 你好！我是事项分类助手。请描述你需要分类的事项内容，我将从紧急程度、重要程度、事项类型、处理优先级等多个维度为你自动分类。
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions:
+    - 客户反馈系统登录页面加载缓慢，影响正常使用，需要尽快排查修复
+    - 下周五部门团建活动需要预订场地和安排餐饮，预算3000元
+    - 整理本月销售数据并生成月度分析报告，下月初提交给管理层
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        sourceType: start
+        targetType: question-classifier
+      id: 1780000009001-source-1780000009002-target
+      source: '1780000009001'
+      sourceHandle: source
+      target: '1780000009002'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: question-classifier
+        targetType: llm
+      id: 1780000009002-2-1780000009003-target
+      source: '1780000009002'
+      sourceHandle: '2'
+      target: '1780000009003'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: answer
+      id: 1780000009003-source-1780000009004-target
+      source: '1780000009003'
+      sourceHandle: source
+      target: '1780000009004'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: question-classifier
+        targetType: llm
+      id: 1780000009002-1-1780000009005-target
+      source: '1780000009002'
+      sourceHandle: '1'
+      target: '1780000009005'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: code
+      id: 1780000009011-source-1780000009012-target
+      source: '1780000009011'
+      sourceHandle: source
+      target: '1780000009012'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: answer
+      id: 1780000009012-source-1780000009006-target
+      source: '1780000009012'
+      sourceHandle: source
+      target: '1780000009006'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: code
+      id: 1780000009009-source-1780000009011-target
+      source: '1780000009009'
+      sourceHandle: source
+      target: '1780000009011'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: code
+      id: 1780000009005-source-1780000009009-target
+      source: '1780000009005'
+      sourceHandle: source
+      target: '1780000009009'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: Start
+        type: start
+        variables: []
+      height: 53
+      id: '1780000009001'
+      position:
+        x: 30
+        y: 288
+      positionAbsolute:
+        x: 30
+        y: 288
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        classes:
+        - id: '1'
+          name: item_classify
+        - id: '2'
+          name: chitchat
+        desc: ''
+        instructions: ''
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: Qwen3-30B-A3B-Instruct-2507
+          provider: openai_api_compatible
+        query_variable_selector:
+        - '1780000009001'
+        - sys.query
+        selected: false
+        title: 意图分类
+        topics: []
+        type: question-classifier
+        vision:
+          enabled: false
+      height: 175
+      id: '1780000009002'
+      position:
+        x: 334
+        y: 288
+      positionAbsolute:
+        x: 334
+        y: 288
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: Qwen3-30B-A3B-Instruct-2507
+          provider: openai_api_compatible
+        prompt_template:
+        - role: system
+          text: 你是一个专业的事项分类助手，只能帮助用户对事项进行多维度分类。如果用户闲聊或询问无关内容，请礼貌说明你的服务范围，并主动提供几个本智能体擅长处理的事项分类示例。语气亲切但不啰嗦。
+        - role: user
+          text: '{{#sys.query#}}'
+        selected: false
+        title: 闲聊及非分类兜底
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 97
+      id: '1780000009003'
+      position:
+        x: 655.189596421839
+        y: 388.61912114245143
+      positionAbsolute:
+        x: 655.189596421839
+        y: 388.61912114245143
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        answer: '{{#1780000009003.text#}}'
+        desc: ''
+        selected: false
+        title: 兜底回答
+        type: answer
+        variables: []
+      height: 101
+      id: '1780000009004'
+      position:
+        x: 930.5402690521073
+        y: 393.4295247206125
+      positionAbsolute:
+        x: 930.5402690521073
+        y: 393.4295247206125
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.3
+          mode: chat
+          name: Qwen3-30B-A3B-Thinking-2507
+          provider: openai_api_compatible
+        prompt_template:
+        - role: system
+          text: "你是一位专业的事项分类专家。你将收到用户提交的事项描述，你的任务是从多个维度对该事项进行精准分类，并给出处理建议。\n\n###\
+            \ 分类维度：\n1. **紧急程度**：根据事项描述中的时间要求、影响范围判断\n   - 紧急：需要立即处理，有明确截止时间且临近，或影响核心业务正常运行\n\
+            \   - 一般：有一定时间要求但不紧迫\n   - 不紧急：无明确时间要求，可灵活安排\n\n2. **重要程度**：根据事项对业务目标的影响程度判断\n\
+            \   - 重要：直接影响核心业务指标、客户满意度或合规要求\n   - 一般：对业务有一定影响但非核心\n   - 不重要：日常事务性工作，影响范围有限\n\
+            \n3. **事项类型**：根据事项的性质归类\n   - 技术问题：系统故障、性能优化、技术排查等\n   - 业务需求：新功能开发、流程优化、业务变更等\n\
+            \   - 行政事务：会议安排、活动组织、文档整理等\n   - 客户咨询：客户反馈、投诉处理、需求沟通等\n   - 数据分析：报表生成、数据统计、趋势分析等\n\
+            \   - 其他：无法归入以上类别的事项\n\n4. **处理优先级**：综合紧急程度和重要程度给出\n   - 高：紧急且重要\n   -\
+            \ 中：紧急不重要 或 重要不紧急\n   - 低：不紧急且不重要\n\n5. **建议处理时效**：根据紧急程度给出建议\n   - 4小时内\
+            \ / 24小时内 / 3个工作日内 / 1周内\n\n### 输出格式：\n你必须严格输出一个 JSON 对象：\n{\n  \"item_summary\"\
+            : \"事项一句话概述\",\n  \"urgency\": {\n    \"level\": \"紧急\" | \"一般\" | \"\
+            不紧急\",\n    \"reason\": \"判断依据\"\n  },\n  \"importance\": {\n    \"level\"\
+            : \"重要\" | \"一般\" | \"不重要\",\n    \"reason\": \"判断依据\"\n  },\n  \"item_type\"\
+            : {\n    \"category\": \"技术问题\" | \"业务需求\" | \"行政事务\" | \"客户咨询\" | \"\
+            数据分析\" | \"其他\",\n    \"reason\": \"归类依据\"\n  },\n  \"priority\": {\n\
+            \    \"level\": \"高\" | \"中\" | \"低\",\n    \"reason\": \"综合判断依据\"\n \
+            \ },\n  \"suggested_timeline\": \"建议处理时效\",\n  \"handling_suggestion\"\
+            : \"针对该事项的具体处理建议（2-3句话）\"\n}\n\n### 分类原则：\n- 仅基于用户提供的事项描述进行分类，不臆测未提及的信息。\n\
+            - 如果事项描述信息不足，在分类结果中明确指出需要补充的信息。\n- 分类理由必须具体、有依据，不能泛泛而谈。\n- 保持客观中立，不添加主观评价。"
+        - role: user
+          text: '用户事项描述：{{#sys.query#}}
+
+
+            请对以上事项进行多维度分类。'
+        selected: false
+        title: 事项分类
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 97
+      id: '1780000009005'
+      position:
+        x: 638
+        y: 159.90773080988635
+      positionAbsolute:
+        x: 638
+        y: 159.90773080988635
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        code: "import re\ndef main(llm_output: str) -> str:\n    if \"</think>\" in\
+          \ llm_output:\n        cleaned_text = re.sub(r\"<think.*?>.*?</think>\"\
+          , \"\", llm_output, flags=re.DOTALL | re.IGNORECASE).strip()\n    else:\n\
+          \        cleaned_text = llm_output\n    return {\n        \"cleaned_text\"\
+          : cleaned_text\n    }"
+        code_language: python3
+        desc: ''
+        outputs:
+          cleaned_text:
+            children: null
+            type: string
+        selected: true
+        title: 提取思考后内容
+        type: code
+        variables:
+        - value_selector:
+          - '1780000009005'
+          - text
+          variable: llm_output
+      height: 53
+      id: '1780000009009'
+      position:
+        x: 1243.7080538104215
+        y: 80
+      positionAbsolute:
+        x: 1243.7080538104215
+        y: 80
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        code: "import json\nimport re\n\ndef main(cleaned_text):\n    text = cleaned_text.strip()\n\
+          \    match = re.search(r'```(?:json)?\\s*\\n?(.*?)\\n?```', text, re.DOTALL)\n\
+          \    if match:\n        text = match.group(1).strip()\n    if not text.startswith('{'):\n\
+          \        start = text.find('{')\n        end = text.rfind('}')\n       \
+          \ if start != -1 and end != -1:\n            text = text[start:end+1]\n\
+          \    data = json.loads(text)\n    return {\"parsed_json\": json.dumps(data,\
+          \ ensure_ascii=False)}"
+        code_language: python3
+        desc: ''
+        outputs:
+          parsed_json:
+            children: null
+            type: string
+        selected: false
+        title: JSON提取清洗
+        type: code
+        variables:
+        - value_selector:
+          - '1780000009009'
+          - cleaned_text
+          variable: cleaned_text
+      height: 53
+      id: '1780000009011'
+      position:
+        x: 1851.7080538104215
+        y: 159.90773080988635
+      positionAbsolute:
+        x: 1851.7080538104215
+        y: 159.90773080988635
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        code: "import json\n\ndef main(parsed_json):\n    data = json.loads(parsed_json)\n\
+          \    summary = data.get(\"item_summary\", \"\")\n    urgency = data.get(\"\
+          urgency\", {})\n    importance = data.get(\"importance\", {})\n    item_type\
+          \ = data.get(\"item_type\", {})\n    priority = data.get(\"priority\", {})\n\
+          \    timeline = data.get(\"suggested_timeline\", \"\")\n    suggestion =\
+          \ data.get(\"handling_suggestion\", \"\")\n\n    lines = []\n    lines.append(\"\
+          ## \U0001F4CB 事项分类结果\")\n    lines.append(\"\")\n    lines.append(f\"**事项概述**：{summary}\"\
+          )\n    lines.append(\"\")\n    lines.append(\"| 分类维度 | 评级 | 判断依据 |\")\n\
+          \    lines.append(\"|---------|------|---------|\")\n    lines.append(f\"\
+          | \U0001F525 紧急程度 | **{urgency.get('level', '')}** | {urgency.get('reason',\
+          \ '')} |\")\n    lines.append(f\"| ⭐ 重要程度 | **{importance.get('level', '')}**\
+          \ | {importance.get('reason', '')} |\")\n    lines.append(f\"| \U0001F4C2\
+          \ 事项类型 | **{item_type.get('category', '')}** | {item_type.get('reason',\
+          \ '')} |\")\n    lines.append(f\"| \U0001F6A8 处理优先级 | **{priority.get('level',\
+          \ '')}** | {priority.get('reason', '')} |\")\n    lines.append(\"\")\n \
+          \   lines.append(f\"⏱️ **建议处理时效**：{timeline}\")\n    lines.append(\"\")\n\
+          \    lines.append(f\"\U0001F4A1 **处理建议**：{suggestion}\")\n\n    formatted\
+          \ = \"\\n\".join(lines)\n    return {\"formatted_result\": formatted}"
+        code_language: python3
+        desc: ''
+        outputs:
+          formatted_result:
+            children: null
+            type: string
+        selected: false
+        title: 格式化美化
+        type: code
+        variables:
+        - value_selector:
+          - '1780000009011'
+          - parsed_json
+          variable: parsed_json
+      height: 53
+      id: '1780000009012'
+      position:
+        x: 2155.7080538104215
+        y: 159.90773080988635
+      positionAbsolute:
+        x: 2155.7080538104215
+        y: 159.90773080988635
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        answer: '{{#1780000009012.formatted_result#}}'
+        desc: ''
+        selected: false
+        title: 分类结果
+        type: answer
+        variables: []
+      height: 101
+      id: '1780000009006'
+      position:
+        x: 2459.7080538104215
+        y: 159.90773080988635
+      positionAbsolute:
+        x: 2459.7080538104215
+        y: 159.90773080988635
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    viewport:
+      x: 189.1243575221393
+      y: 203.4114395929238
+      zoom: 0.42028119961982313

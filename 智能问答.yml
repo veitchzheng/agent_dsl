@@ -1,0 +1,330 @@
+app:
+  description: ''
+  icon: ''
+  icon_background: '#FFEAD5'
+  mode: advanced-chat
+  name: 智能问答
+  use_icon_as_answer_icon: false
+kind: app
+version: 0.1.2
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        sourceType: start
+        targetType: llm
+      id: 1778202740078-llm
+      source: '1778202740078'
+      sourceHandle: source
+      target: llm
+      targetHandle: target
+      type: custom
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: answer
+      id: 1778211189693-source-1778211442459-target
+      source: '1778211189693'
+      sourceHandle: source
+      target: '1778211442459'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: knowledge-retrieval
+        targetType: llm
+      id: 1778211496337-source-1778211189693-target
+      source: '1778211496337'
+      sourceHandle: source
+      target: '1778211189693'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: code
+      id: llm-source-1778211650857-target
+      source: llm
+      sourceHandle: source
+      target: '1778211650857'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: knowledge-retrieval
+      id: 1778211650857-source-1778211496337-target
+      source: '1778211650857'
+      sourceHandle: source
+      target: '1778211496337'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: 开始
+        type: start
+        variables:
+        - allowed_file_extensions: []
+          allowed_file_types:
+          - image
+          allowed_file_upload_methods:
+          - local_file
+          - remote_url
+          label: 用户输入
+          max_length: 10000
+          options: []
+          required: true
+          type: paragraph
+          variable: query
+      height: 90
+      id: '1778202740078'
+      position:
+        x: 80
+        y: 282
+      positionAbsolute:
+        x: 80
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1778202740078'
+          - query
+        desc: ''
+        memory:
+          query_prompt_template: 以下是用户输入内容：{{#sys.query#}}
+          role_prefix:
+            assistant: ''
+            user: ''
+          window:
+            enabled: false
+            size: 10
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: Qwen3-30B-A3B-Thinking-2507
+          provider: openai_api_compatible
+        prompt_template:
+        - role: system
+          text: '你是一个对话意图分析专家。根据用户消息，用一句简短的话概括用户的核心意图。
+
+
+            要求：
+
+            1. 意图描述要简洁清晰，通常不超过20个字。
+
+            2. 如果用户是闲聊或意图不明，请输出“其他意图”。
+
+            3. 只输出意图描述本身，不要加任何前缀、解释或标点以外的内容。'
+        selected: false
+        title: LLM
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 98
+      id: llm
+      position:
+        x: 380
+        y: 282
+      positionAbsolute:
+        x: 380
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - llm
+          - text
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: Qwen3-30B-A3B-Thinking-2507
+          provider: openai_api_compatible
+        prompt_template:
+        - id: bdb80668-ce01-4c28-9512-74ff4946945e
+          role: system
+          text: '你是一个专业、严谨的智能问答助手。你的任务是基于提供的知识上下文和对话历史，回答用户的最新问题。
+
+
+            要求：
+
+            1. 如果知识上下文中提供了相关信息，请优先依据这些信息，用自己的话整理清晰，分点说明。
+
+            2. 如果知识上下文为空或完全无相关，请根据你自身的知识直接回答，不要编造信息，如实告知不确定的部分。
+
+            3. 回答简洁、准确，优先使用中文。
+
+            4. 如果对话历史中有相关信息，可以适当结合。'
+        - id: 3f22f26a-94fd-4a28-a783-dcf06f0de7b9
+          role: user
+          text: '以下是用户提问：{{#llm.text#}}。
+
+            以下是可能参考的文档内容：{{#1778211496337.result#}}'
+        selected: false
+        title: LLM 2
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 98
+      id: '1778211189693'
+      position:
+        x: 1320.9180982809542
+        y: 282
+      positionAbsolute:
+        x: 1320.9180982809542
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        answer: '{{#1778211189693.text#}}'
+        desc: ''
+        selected: false
+        title: 直接回复
+        type: answer
+        variables: []
+      height: 102
+      id: '1778211442459'
+      position:
+        x: 1623.9180982809542
+        y: 282
+      positionAbsolute:
+        x: 1623.9180982809542
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        dataset_ids:
+        - 09f9d842-ccb8-4417-b111-9e4145a5b3ea
+        desc: ''
+        multiple_retrieval_config:
+          reranking_enable: true
+          reranking_mode: null
+          reranking_model:
+            model: ''
+            provider: ''
+          score_threshold: null
+          top_k: 2
+          weights: null
+        query_variable_selector:
+        - llm
+        - text
+        retrieval_mode: multiple
+        selected: false
+        title: 知识检索
+        type: knowledge-retrieval
+      height: 54
+      id: '1778211496337'
+      position:
+        x: 1020.9180982809542
+        y: 282
+      positionAbsolute:
+        x: 1020.9180982809542
+        y: 282
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import re\ndef main(arg1: str) -> str:\n    return {\n        \"result\"\
+          : re.sub(r\"<think.*?>.*?</think>\", \"\", arg1, flags=re.DOTALL | re.IGNORECASE).strip(),\n\
+          \    }\n"
+        code_language: python3
+        desc: ''
+        outputs:
+          result:
+            children: null
+            type: string
+        selected: true
+        title: 代码执行
+        type: code
+        variables:
+        - value_selector: []
+          variable: arg1
+      height: 54
+      id: '1778211650857'
+      position:
+        x: 720.9180982809542
+        y: 282
+      positionAbsolute:
+        x: 720.9180982809542
+        y: 282
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    viewport:
+      x: 179.74399650199666
+      y: 62.04517043510907
+      zoom: 0.6718686971344254

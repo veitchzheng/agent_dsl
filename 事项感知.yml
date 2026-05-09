@@ -1,0 +1,734 @@
+app:
+  description: 智能事项感知助手，支持自然语言录入事项、智能分类提取、多维度查询回顾、优先级分析与洞察建议，让事项管理更高效。
+  icon: ''
+  icon_background: '#E3F2FD'
+  mode: advanced-chat
+  name: 事项感知
+  use_icon_as_answer_icon: false
+kind: app
+version: 0.1.2
+workflow:
+  conversation_variables:
+  - description: ''
+    id: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+    name: task_list
+    value: '[]'
+    value_type: string
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: '👋 你好！我是**事项感知助手**，可以帮你：
+
+
+      📝 **记录事项** — 直接告诉我你要做的事，我会自动提取关键信息并生成事项卡片
+
+      🔍 **查询回顾** — 问我「最近有哪些事项」「待办有哪些」，我会帮你梳理
+
+      📊 **分析洞察** — 让我帮你分析事项优先级、时间冲突、进度风险
+
+
+      💡 试试说：*「下周五前完成项目方案，优先级高」*'
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions:
+    - 下周五前完成项目方案，优先级高，需要协调设计和技术团队
+    - 帮我看看目前有哪些待办事项
+    - 分析一下我的事项优先级，哪些需要优先处理
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        sourceType: start
+        targetType: question-classifier
+      id: 1782000001000-source-1782000002000-target
+      source: '1782000001000'
+      sourceHandle: source
+      target: '1782000002000'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: question-classifier
+        targetType: llm
+      id: 1782000002000-1-1782000003000-target
+      source: '1782000002000'
+      sourceHandle: '1'
+      target: '1782000003000'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: code
+      id: 1782000003000-source-1782000004000-target
+      source: '1782000003000'
+      sourceHandle: source
+      target: '1782000004000'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: assigner
+      id: 1782000004000-source-1782000005000-target
+      source: '1782000004000'
+      sourceHandle: source
+      target: '1782000005000'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: assigner
+        targetType: answer
+      id: 1782000005000-source-1782000006000-target
+      source: '1782000005000'
+      sourceHandle: source
+      target: '1782000006000'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: question-classifier
+        targetType: llm
+      id: 1782000002000-2-1782000007000-target
+      source: '1782000002000'
+      sourceHandle: '2'
+      target: '1782000007000'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: answer
+      id: 1782000007000-source-1782000008000-target
+      source: '1782000007000'
+      sourceHandle: source
+      target: '1782000008000'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: question-classifier
+        targetType: llm
+      id: 1782000002000-3-1782000009000-target
+      source: '1782000002000'
+      sourceHandle: '3'
+      target: '1782000009000'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: answer
+      id: 1782000009000-source-1782000010000-target
+      source: '1782000009000'
+      sourceHandle: source
+      target: '1782000010000'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: question-classifier
+        targetType: llm
+      id: 1782000002000-4-1782000011000-target
+      source: '1782000002000'
+      sourceHandle: '4'
+      target: '1782000011000'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: answer
+      id: 1782000011000-source-1782000012000-target
+      source: '1782000011000'
+      sourceHandle: source
+      target: '1782000012000'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: Start
+        type: start
+        variables: []
+      height: 54
+      id: '1782000001000'
+      position:
+        x: 80
+        y: 288
+      positionAbsolute:
+        x: 80
+        y: 288
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        classes:
+        - id: '1'
+          name: add_task
+        - id: '2'
+          name: query_task
+        - id: '3'
+          name: analyze_task
+        - id: '4'
+          name: chitchat
+        desc: ''
+        instructions: '你是事项感知智能体的意图分类器。请根据用户输入判断意图：
+
+
+          - add_task：用户想要记录、添加、创建新的事项/任务/待办。包括描述要做的事情、设定截止日期、指定优先级等。
+
+          - query_task：用户想要查询、回顾、搜索已有的事项。包括问「有哪些」「待办是什么」「之前记了什么」。
+
+          - analyze_task：用户想要分析、洞察、评估事项。包括问优先级、时间安排、进度风险、建议等。
+
+          - chitchat：闲聊、问候、与事项管理无关的内容。
+
+
+          注意：如果用户输入同时包含记录和查询意图，优先判断为 add_task。'
+        model:
+          completion_params:
+            temperature: 0.3
+          mode: chat
+          name: Qwen3-30B-A3B-Instruct-2507
+          provider: openai_api_compatible
+        query_variable_selector:
+        - '1782000001000'
+        - sys.query
+        selected: false
+        title: 意图分类
+        topics: []
+        type: question-classifier
+        vision:
+          enabled: false
+      height: 248
+      id: '1782000002000'
+      position:
+        x: 384
+        y: 288
+      positionAbsolute:
+        x: 384
+        y: 288
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.3
+          mode: chat
+          name: Qwen3-30B-A3B-Thinking-2507
+          provider: openai_api_compatible
+        prompt_template:
+        - role: system
+          text: "你是一个专业的事项信息提取器。你的任务是从用户的自然语言输入中，精准提取事项的结构化信息。\n\n### 提取字段说明：\n- `title`：事项标题，简洁概括（不超过20字）\n\
+            - `description`：事项详细描述，保留用户原始语义\n- `deadline`：截止日期/时间，如用户提到具体日期则提取（如\"\
+            下周五\"→计算为具体日期），未提及则为 null\n- `priority`：优先级，根据用户描述判断：`urgent`（紧急）、`high`（高）、`medium`（中）、`low`（低）。如用户明确说了优先级则用用户说的，否则根据语境推断\n\
+            - `category`：事项分类：`work`（工作）、`personal`（个人）、`study`（学习）、`meeting`（会议）、`other`（其他）\n\
+            - `tags`：标签数组，提取关键词标签（如\"项目\"\"方案\"\"协调\"等）\n- `stakeholders`：相关人员/团队，如用户提到则提取为数组\n\
+            - `subtasks`：子任务数组，如用户描述了步骤则拆解，否则为空数组\n- `notes`：补充备注，提取用户提到的特殊要求、注意事项等\n\
+            \n### 输出格式：\n你必须严格输出一个 JSON 对象：\n{\n  \"title\": \"事项标题\",\n  \"description\"\
+            : \"完整描述\",\n  \"deadline\": \"2026-05-15\" | null,\n  \"priority\": \"\
+            urgent\" | \"high\" | \"medium\" | \"low\",\n  \"category\": \"work\"\
+            \ | \"personal\" | \"study\" | \"meeting\" | \"other\",\n  \"tags\": [\"\
+            标签1\", \"标签2\"],\n  \"stakeholders\": [\"相关人员\"],\n  \"subtasks\": [\"\
+            子任务1\", \"子任务2\"],\n  \"notes\": \"补充备注\"\n}\n\n### 提取原则：\n- 保留用户原意，不添加用户未提及的信息\n\
+            - 日期优先使用用户明确说的，其次根据\"下周\"\"明天\"等推算\n- 优先级如用户未明确说，根据\"紧急\"\"尽快\"\"ASAP\"\
+            等关键词推断\n- 分类根据事项性质判断"
+        - role: user
+          text: '## 用户输入
+
+
+            {{#sys.query#}}
+
+
+            ## 已有事项列表（供参考，避免重复）
+
+
+            {{#conversation.task_list#}}
+
+
+            请提取以上输入中的事项信息，输出 JSON。'
+        selected: false
+        title: 事项信息提取
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 98
+      id: '1782000003000'
+      position:
+        x: 688
+        y: 80
+      positionAbsolute:
+        x: 688
+        y: 80
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\nimport hashlib\nimport time\nimport re\n\ndef main(llm_output,\
+          \ existing_tasks):\n    if \"</think>\" in llm_output:\n        llm_output\
+          \ = re.sub(r\"<think.*?>.*?</think>\", \"\", llm_output, flags=re.DOTALL\
+          \ | re.IGNORECASE).strip()\n    data = json.loads(llm_output)\n\n    raw\
+          \ = json.dumps(data, ensure_ascii=False) + str(time.time())\n    task_id\
+          \ = hashlib.md5(raw.encode()).hexdigest()[:12]\n\n    data[\"id\"] = task_id\n\
+          \    data[\"created_at\"] = time.strftime(\"%Y-%m-%d %H:%M\")\n    data[\"\
+          status\"] = \"pending\"\n\n    try:\n        tasks = json.loads(existing_tasks)\
+          \ if existing_tasks else []\n    except:\n        tasks = []\n    tasks.append(data)\n\
+          \n    card = format_task_card(data)\n\n    return {\n        \"task_card\"\
+          : card,\n        \"updated_task_list\": json.dumps(tasks, ensure_ascii=False),\n\
+          \        \"task_count\": len(tasks)\n    }\n\n\ndef format_task_card(task):\n\
+          \    priority_map = {\n        \"urgent\": (\"\U0001F534 紧急\", \"#FF0000\"\
+          ),\n        \"high\": (\"\U0001F7E0 高优先级\", \"#FF6B00\"),\n        \"medium\"\
+          : (\"\U0001F7E1 中等\", \"#FFB800\"),\n        \"low\": (\"\U0001F7E2 低优先级\"\
+          , \"#00C853\")\n    }\n    category_map = {\n        \"work\": \"\U0001F4BC\
+          \ 工作\",\n        \"personal\": \"\U0001F464 个人\",\n        \"study\": \"\
+          \U0001F4DA 学习\",\n        \"meeting\": \"\U0001F91D 会议\",\n        \"other\"\
+          : \"\U0001F4CB 其他\"\n    }\n    status_map = {\n        \"pending\": \"\
+          ⏳ 待处理\",\n        \"in_progress\": \"\U0001F504 进行中\",\n        \"done\"\
+          : \"✅ 已完成\",\n        \"cancelled\": \"❌ 已取消\"\n    }\n\n    p_label, _\
+          \ = priority_map.get(task.get(\"priority\", \"medium\"), priority_map[\"\
+          medium\"])\n    c_label = category_map.get(task.get(\"category\", \"other\"\
+          ), category_map[\"other\"])\n    s_label = status_map.get(task.get(\"status\"\
+          , \"pending\"), status_map[\"pending\"])\n\n    lines = []\n    lines.append(\"\
+          ╔══════════════════════════════════════╗\")\n    lines.append(\"║  \U0001F4CC\
+          \ 事项卡片                        ║\")\n    lines.append(\"╠══════════════════════════════════════╣\"\
+          )\n    lines.append(\"║                                      ║\")\n    lines.append(f\"\
+          ║  \U0001F3F7️  标题：{task.get('title', '未命名')}\")\n    lines.append(f\"║\
+          \  \U0001F4C2 分类：{c_label}\")\n    lines.append(f\"║  \U0001F6A9 优先级：{p_label}\"\
+          )\n    lines.append(f\"║  \U0001F4CA 状态：{s_label}\")\n    lines.append(f\"\
+          ║  \U0001F194 ID：{task.get('id', 'N/A')}\")\n    lines.append(f\"║  \U0001F550\
+          \ 创建：{task.get('created_at', 'N/A')}\")\n\n    deadline = task.get(\"deadline\"\
+          )\n    if deadline:\n        lines.append(f\"║  ⏰ 截止：{deadline}\")\n\n \
+          \   lines.append(\"║                                      ║\")\n    lines.append(\"\
+          ╠══════════════════════════════════════╣\")\n    lines.append(\"║  \U0001F4DD\
+          \ 描述：\")\n    desc = task.get(\"description\", \"无\")\n    max_width = 30\n\
+          \    for i in range(0, len(desc), max_width):\n        chunk = desc[i:i+max_width]\n\
+          \        lines.append(f\"║     {chunk}\")\n\n    tags = task.get(\"tags\"\
+          , [])\n    if tags:\n        lines.append(f\"║  \U0001F3F7️  标签：{' | '.join(tags)}\"\
+          )\n\n    stakeholders = task.get(\"stakeholders\", [])\n    if stakeholders:\n\
+          \        lines.append(f\"║  \U0001F465 相关人员：{', '.join(stakeholders)}\"\
+          )\n\n    subtasks = task.get(\"subtasks\", [])\n    if subtasks:\n     \
+          \   lines.append(\"║  \U0001F4CB 子任务：\")\n        for i, st in enumerate(subtasks,\
+          \ 1):\n            lines.append(f\"║     {i}. {st}\")\n\n    notes = task.get(\"\
+          notes\")\n    if notes:\n        lines.append(f\"║  \U0001F4AC 备注：{notes}\"\
+          )\n\n    lines.append(\"║                                      ║\")\n  \
+          \  lines.append(\"╚══════════════════════════════════════╝\")\n\n    return\
+          \ \"\\n\".join(lines)"
+        code_language: python3
+        desc: ''
+        outputs:
+          task_card:
+            children: null
+            type: string
+          task_count:
+            children: null
+            type: number
+          updated_task_list:
+            children: null
+            type: string
+        selected: false
+        title: 解析并生成卡片
+        type: code
+        variables:
+        - value_selector:
+          - '1782000003000'
+          - text
+          variable: llm_output
+        - value_selector:
+          - conversation
+          - task_list
+          variable: existing_tasks
+      height: 54
+      id: '1782000004000'
+      position:
+        x: 992
+        y: 80
+      positionAbsolute:
+        x: 992
+        y: 80
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        assigned_variable_selector:
+        - conversation
+        - task_list
+        desc: ''
+        input_variable_selector:
+        - '1782000004000'
+        - updated_task_list
+        selected: false
+        title: 更新事项列表
+        type: assigner
+        write_mode: over-write
+      height: 132
+      id: '1782000005000'
+      position:
+        x: 1296
+        y: 80
+      positionAbsolute:
+        x: 1296
+        y: 80
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        answer: '{{#1782000004000.task_card#}}
+
+
+          ---
+
+
+          ### 📊 事项统计
+
+
+          > 当前共记录 **{{#1782000004000.task_count#}}** 个事项
+
+
+          💡 **下一步建议**：
+
+          - 输入 `查询事项` 查看完整列表
+
+          - 输入 `分析优先级` 获取智能建议
+
+          - 继续告诉我新的事项，我会持续记录'
+        desc: ''
+        selected: false
+        title: 输出事项卡片
+        type: answer
+        variables: []
+      height: 202
+      id: '1782000006000'
+      position:
+        x: 1600
+        y: 80
+      positionAbsolute:
+        x: 1600
+        y: 80
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.3
+          mode: chat
+          name: Qwen3-30B-A3B-Thinking-2507
+          provider: openai_api_compatible
+        prompt_template:
+        - role: system
+          text: '你是一个事项查询助手。你的任务是根据用户查询，从事项列表中检索并呈现相关信息。
+
+
+            ### 输出要求：
+
+            请用清晰美观的 Markdown 格式输出查询结果，包含以下元素：
+
+
+            1. **查询摘要**：一句话概括查询结果
+
+            2. **事项列表**：用表格展示，包含标题、优先级、截止日期、状态
+
+            3. **统计概览**：按优先级和状态统计数量
+
+            4. **重点关注**：高亮即将到期或高优先级的事项
+
+
+            ### 表格格式示例：
+
+            | # | 标题 | 优先级 | 截止日期 | 状态 |
+
+            |---|------|--------|----------|------|
+
+            | 1 | xxx | 🔴 紧急 | 2026-05-10 | ⏳ 待处理 |
+
+
+            ### 注意事项：
+
+            - 如果事项列表为空，友好提示用户先添加事项
+
+            - 按优先级从高到低排序
+
+            - 截止日期临近（3天内）的事项用 ⚠️ 标记
+
+            - 语言简洁有条理'
+        - role: user
+          text: '## 用户查询
+
+
+            {{#sys.query#}}
+
+
+            ## 当前事项列表
+
+
+            {{#conversation.task_list#}}
+
+
+            请根据以上信息，生成查询结果。'
+        selected: false
+        title: 事项查询
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 98
+      id: '1782000007000'
+      position:
+        x: 688
+        y: 288
+      positionAbsolute:
+        x: 688
+        y: 288
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        answer: '{{#1782000007000.text#}}'
+        desc: ''
+        selected: false
+        title: 输出查询结果
+        type: answer
+        variables: []
+      height: 103
+      id: '1782000008000'
+      position:
+        x: 992
+        y: 288
+      positionAbsolute:
+        x: 992
+        y: 288
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.5
+          mode: chat
+          name: Qwen3-30B-A3B-Thinking-2507
+          provider: openai_api_compatible
+        prompt_template:
+        - role: system
+          text: "你是一个资深的事项分析与规划顾问。你的任务是对用户的事项列表进行深度分析，提供可落地的洞察和建议。\n\n### 分析维度：\n\n\
+            1. **优先级矩阵**：按「紧急-重要」四象限分类\n   - \U0001F534 紧急且重要：立即处理\n   - \U0001F7E0\
+            \ 重要不紧急：制定计划\n   - \U0001F7E1 紧急不重要：委托他人\n   - \U0001F7E2 不紧急不重要：延后或取消\n\
+            \n2. **时间线分析**：\n   - 按截止日期排列，标注时间冲突\n   - 识别过度密集的时间段\n   - 给出时间分配建议\n\
+            \n3. **工作量评估**：\n   - 评估每个事项的预估耗时\n   - 总工作量概览\n   - 可行性分析\n\n4. **风险预警**：\n\
+            \   - 标记可能延期的事项\n   - 标记依赖关系缺失的事项\n   - 标记描述不清晰需要澄清的事项\n\n5. **行动建议**：\n\
+            \   - 本周重点（Top 3）\n   - 建议调整优先级的事项\n   - 建议拆分的事项\n   - 建议合并的相似事项\n\n###\
+            \ 输出格式：\n用精美的 Markdown 格式输出，包含：\n- \U0001F4CA 总览仪表盘（统计数字卡片）\n- \U0001F3AF\
+            \ 优先级矩阵（四象限表格）\n- \U0001F4C5 时间线视图（按日期排列）\n- ⚠️ 风险预警清单\n- \U0001F4A1 行动建议（具体可执行）\n\
+            \n### 注意事项：\n- 分析必须基于实际数据，不编造\n- 建议具体可操作，不说空话\n- 如果事项不足3个，说明样本较少，分析仅供参考\n\
+            - 语气专业但亲切，像一位靠谱的顾问"
+        - role: user
+          text: '## 用户分析请求
+
+
+            {{#sys.query#}}
+
+
+            ## 当前事项列表
+
+
+            {{#conversation.task_list#}}
+
+
+            请对以上事项进行全面分析，输出洞察报告。'
+        selected: false
+        title: 事项分析洞察
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 98
+      id: '1782000009000'
+      position:
+        x: 688
+        y: 496
+      positionAbsolute:
+        x: 688
+        y: 496
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        answer: '{{#1782000009000.text#}}'
+        desc: ''
+        selected: false
+        title: 输出分析报告
+        type: answer
+        variables: []
+      height: 103
+      id: '1782000010000'
+      position:
+        x: 992
+        y: 496
+      positionAbsolute:
+        x: 992
+        y: 496
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: Qwen3-30B-A3B-Instruct-2507
+          provider: openai_api_compatible
+        prompt_template:
+        - role: system
+          text: '你是一个友好的事项感知助手。当用户闲聊或询问与事项管理无关的内容时，请礼貌地说明你的专长范围，并引导用户使用事项管理功能。
+
+
+            ### 你的核心能力：
+
+            📝 **记录事项** — 帮用户把待办事项结构化记录
+
+            🔍 **查询回顾** — 帮用户快速查找和梳理已有事项
+
+            📊 **分析洞察** — 帮用户分析优先级、时间安排和风险
+
+
+            ### 回复要求：
+
+            - 语气亲切自然，不啰嗦
+
+            - 简要说明你能做什么
+
+            - 主动提供 2-3 个具体的使用示例，引导用户体验
+
+            - 如果用户表达了模糊的需求，主动追问澄清'
+        - role: user
+          text: '{{#sys.query#}}'
+        selected: false
+        title: 闲聊兜底
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 98
+      id: '1782000011000'
+      position:
+        x: 688
+        y: 704
+      positionAbsolute:
+        x: 688
+        y: 704
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        answer: '{{#1782000011000.text#}}'
+        desc: ''
+        selected: false
+        title: 兜底回答
+        type: answer
+        variables: []
+      height: 103
+      id: '1782000012000'
+      position:
+        x: 992
+        y: 704
+      positionAbsolute:
+        x: 992
+        y: 704
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    viewport:
+      x: -209.36197403728806
+      y: 44.94601419599701
+      zoom: 0.8293195458144418
