@@ -254,12 +254,12 @@ workflow:
       height: 92
       id: '1778140495533'
       position:
-        x: 638
+        x: 641.7434825622554
         y: 159.90773080988635
       positionAbsolute:
-        x: 638
+        x: 641.7434825622554
         y: 159.90773080988635
-      selected: false
+      selected: true
       sourcePosition: right
       targetPosition: left
       type: custom
@@ -311,7 +311,7 @@ workflow:
       positionAbsolute:
         x: 939.7080538104215
         y: 159.90773080988635
-      selected: true
+      selected: false
       sourcePosition: right
       targetPosition: left
       type: custom
@@ -337,6 +337,6 @@ workflow:
       type: custom
       width: 244
     viewport:
-      x: -609.2562150631652
-      y: -33.89899856832221
-      zoom: 1.170744959879688
+      x: -221.18770820624172
+      y: 122.9519997739431
+      zoom: 0.9969830888604878
